@@ -7,20 +7,11 @@ from sklearn import model_selection
 import config
 
 if __name__ == "__main__":
-    # read the training data
     df = pd.read_csv(config.TRAINING_FILE)
-
-    # features are all columns without price_range
-    # note that there is no id column in this dataset
-
-    # Here we have training features
     X = df.drop("price_range", axis=1).values
-    # and the targets
     y = df.price_range.values
 
     print("define the model here")
-    # i am using random forest with n_jobs=-1
-    # n_jobs=-1 => use all cores
     classifier = ensemble.RandomForestClassifier(n_jobs=-1, random_state=0)
 
     print("[INFO] define a grid of parameters")
@@ -31,12 +22,11 @@ if __name__ == "__main__":
         "max_depth": [1, 2, 5, 7, 11, 15],
         "criterion": ["gini", "entropy"]}
 
-    # initialize grid search
-    # estimator is the model that we have defined
-    # param_grid is the grid of parameters
-    # we use accuracy as our metric. you can define your own
+    # initialize grid search estimator is the model that we have defined
+    # param_grid is the grid of parameters we use accuracy as our metric. you can define your own
     # higher value of verbose implies a lot of details are printed
     # cv=5 means that we are using 5 fold cv (not stratified)
+
     # model = model_selection.GridSearchCV(
     #     estimator=classifier,
     #     param_grid=param_grid,
@@ -70,6 +60,7 @@ if __name__ == "__main__":
         cv=5
     )
     model_rand.fit(X, y)
+
     print(f"Best score: {model_rand.best_score_}")
     print("Best parameters set:")
     best_parameters = model_rand.best_estimator_.get_params()
@@ -79,7 +70,7 @@ if __name__ == "__main__":
     # Get best model
     best_model = model_rand.best_estimator_
 
-    df = pd.read_csv("../input/test.csv")
+    df = pd.read_csv(config.TESTING_FILE)
     X_valid = df.drop('id', axis=1).values
     preds = best_model.predict(X_valid)
     print(preds)

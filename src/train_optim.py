@@ -60,12 +60,7 @@ def optimize(params, param_names, x, y):
 
 
 if __name__ == "__main__":
-    # read the training data
     df = pd.read_csv(config.TRAINING_FILE)
-
-    # features are all columns without price_range
-    # note that there is no id column in this dataset
-    # here we have training features
     X = df.drop("price_range", axis=1).values
     y = df.price_range.values
 
@@ -85,12 +80,7 @@ if __name__ == "__main__":
     # make a list of param names
     # this has to be same order as the search space
     # inside the main function
-    param_names = [
-        "max_depth",
-        "n_estimators",
-        "criterion",
-        "max_features"
-    ]
+    param_names = ["max_depth", "n_estimators", "criterion", "max_features"]
     # by using functools partial, i am creating a
     # new function which has same parameters as the
     # optimize function except for the fact that
@@ -118,10 +108,5 @@ if __name__ == "__main__":
         verbose=10
     )
     # create best params dict and print it
-    best_params = dict(
-        zip(
-            param_names,
-            result.x
-        )
-    )
+    best_params = dict(zip(param_names, result.x))
     print(best_params)
